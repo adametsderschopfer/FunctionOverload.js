@@ -11,9 +11,6 @@ export function overload() {
                 functions[args[i][1].length] = args[i];
             }
         }
-        /*		if (typeof (args[i]) === 'function') {
-            functions[args[i].length] = args[i];
-        }*/
     }
     return function () {
         const callElement = functions[arguments.length];
