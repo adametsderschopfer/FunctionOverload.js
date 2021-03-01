@@ -3,7 +3,7 @@
 The 'overload' function accepts 'x' arguments of type array, at index 0, we must have an object with the typing of each argument, and at index 1, there is the typed function itself.
 It is possible to use without typing, by simple separation according to the length of the arguments
 
-**Since Javascript is an interpreted language, the implementation of such things is, in principle, impossible, so you can get by with this function**
+**Since Javascript is an interpreted language, the implementation of such things is, in principle, impossible, so you can get by with this function.**
 **But using this approach suffers greatly from performance, so it is worth using such things in Javascript with caution and extreme necessity.**
 
 ## Example 
