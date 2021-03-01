@@ -30,4 +30,4 @@ If we do not have several functions with the same number of arguments, but diffe
  getSomethingValue(1, '2') // => You have a mistake in your arguments type!
 ```
 
-In this case, the error occurred due to the fact that this function takes the Number type as its second argument.
+In this case, the error occurred due to the fact that this function takes the String type as its second argument.
