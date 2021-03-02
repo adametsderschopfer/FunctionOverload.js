@@ -1,5 +1,3 @@
-import instantiate = WebAssembly.instantiate;
-
 type TOverloadArguments = Function | [object, Function];
 
 function overload() {
@@ -34,11 +32,11 @@ function overload() {
 			let call = false;
 
 			const matchingTypes = Array.from(arguments).map((arg, idx) => {
-				if (typeof (arg) === typesOfCallElement[idx].toLowerCase()) {
-					return '1';
-				} else {
-					return '0'
-				}
+				if (typeof typesOfCallElement[idx] !== 'string')
+					console.log(new SyntaxError('Type must be a string!'))
+					return;
+
+				return typeof (arg) === typesOfCallElement[idx].toLowerCase() ? '1' : '0';
 			})
 				.find((i: string) => i === "0");
 
