@@ -2,7 +2,7 @@ export function overload() {
     const args = Array.from(arguments);
     let functions = [];
     for (let i = 0; i !== args.length; i++) {
-        if (typeof (args[i]) === 'function') {
+        if (typeof(args[i]) === 'function') {
             functions[args[i].length] = args[i];
         }
         if (args[i] instanceof Array) {
@@ -12,27 +12,33 @@ export function overload() {
             }
         }
     }
-    return function () {
+    return function() {
         const callElement = functions[arguments.length];
         if (callElement instanceof Function) {
-            return functions[arguments.length]?.apply(this, arguments);
-        }
-        else if (callElement instanceof Array) {
+            return functions[arguments.length].apply(this, arguments);
+        } else if (callElement instanceof Array) {
             const typesOfCallElement = Object.values(callElement[0]);
             let call = false;
-            const matchingTypes = Array.from(arguments).map((arg, idx) => {
-                if (typeof typesOfCallElement[idx] !== 'string')
-                    console.log(new SyntaxError('Type must be a string!'))
-                    return;
-            
-                return typeof (arg) === typesOfCallElement[idx].toLowerCase() ? '1' : '0';
-            })
-                .find((i) => i === "0");
-        
-            if (matchingTypes === undefined) {
-                return functions[arguments.length][1].apply(this, arguments);
+            let mathingTypes = [];
+
+            for (let i = 0; i !== Array.from(arguments).length; i++) {
+
+                if (typeof typesOfCallElement[i] !== 'string') {
+                    console.log(new SyntaxError('Type must be a string!'));
+                    mathingTypes = ['0'];
+                    break;
+                }
+
+                mathingTypes = [...mathingTypes, typeof(Array.from(arguments)[i]) === typesOfCallElement[i].toLowerCase() ?
+                    '1' : '0'
+                ]
             }
-            else {
+
+            const isMatchingTypes = mathingTypes.find((i) => i === "0");
+
+            if (isMatchingTypes === undefined) {
+                return functions[arguments.length][1].apply(this, arguments);
+            } else {
                 console.error(SyntaxError(`You have a mistake in your arguments type!`));
             }
         }
