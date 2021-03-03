@@ -58,15 +58,3 @@ function overload() {
         }
     };
 }
-
-const multifunc = overload(
-function(x, y) { return x + y },
-function (x, y, z) { return x + y + z },
-
-[{x: 'Number'}, function(x) {return x}]
-
-);
-
-console.log(multifunc(1, 2))
-console.log(multifunc(1, 2, 3))
-console.log(multifunc(1))
