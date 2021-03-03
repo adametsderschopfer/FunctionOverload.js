@@ -2,6 +2,10 @@ function overload() {
     const args = Array.from(arguments);
     let functions = [];
     
+    if (!args.length) {
+        throw new SyntaxError('Overload function must take at least one argument')
+    }
+    
     for (let i = 0; i !== args.length; i++) {
         if (typeof(args[i]) === 'function') {
             functions[args[i].length] = args[i];
@@ -14,6 +18,10 @@ function overload() {
         } else { 
             continue;
         }
+    }
+    
+    if (!functions.length) {
+        throw new SyntaxError('None of the input parameters were specified correctly, the function must accept a function or an array where the first argument is an object with the typing of the input parameter, and the second is the typed function')
     }
     
     return function() {
