@@ -1,4 +1,14 @@
 function overload() {
+    function arrayTypeChecker(arr) {
+        if (!(arr[0] instanceof Object)) {
+            throw new SyntaxError('First argument of array must be a type Object.')
+        }
+
+        if (!(arr[1] instanceof Function)) {
+            throw new SyntaxError('Second argument of array must be a type Function.')
+        }
+    }
+
     const args = Array.from(arguments);
     let functions = [];
     
@@ -10,9 +20,11 @@ function overload() {
         if (typeof(args[i]) === 'function') {
             functions[args[i].length] = args[i];
         } else if (args[i] instanceof Array) {
-            const argArr = args[i];
+            const argArray = args[i];
             
-            if (argArr[0] instanceof Object && argArr[1] instanceof Function) {
+            arrayTypeChecker(argArray);
+            
+            if (argArray[0] instanceof Object && argArray[1] instanceof Function) {
                 functions[args[i][1].length] = args[i];
             }
         } else { 
@@ -34,13 +46,7 @@ function overload() {
             const typesOfCallElement = Object.values(callElement[0]);
             let mathingTypes = [];
 
-            if (!(callElement[0] instanceof Object)) {
-                throw new SyntaxError('First argument of array must be a type Object.')
-            }
-
-            if (!(callElement[1] instanceof Function)) {
-                throw new SyntaxError('Second argument of array must be a type Function.')
-            }
+            arrayTypeChecker(callElement);
 
             for (let i = 0; i !== Array.from(arguments).length; i++) {
 
