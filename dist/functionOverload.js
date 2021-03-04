@@ -1,73 +1,81 @@
-function overload() {
-    function arrayTypeChecker(arr) {
-        if (!(arr[0] instanceof Object)) {
-            throw new SyntaxError('First argument of array must be a type Object.')
+function overload() 
+{
+    function arrayTypeChecker(arr) 
+    {
+        if (!(arr[0] instanceof Object)) 
+        {
+            throw new SyntaxError('First argument of array must be a type Object.');
         }
 
-        if (!(arr[1] instanceof Function)) {
-            throw new SyntaxError('Second argument of array must be a type Function.')
+        if (!(arr[1] instanceof Function)) 
+        {
+            throw new SyntaxError('Second argument of array must be a type Function.');
         }
     }
 
     const args = Array.from(arguments);
     let functions = [];
     
-    if (!args.length) {
-        throw new SyntaxError('Overload function must take at least one argument')
+    if (!args.length) 
+    {
+        throw new SyntaxError('Overload function must take at least one argument');
     }
     
-    for (let i = 0; i !== args.length; i++) {
-        if (typeof(args[i]) === 'function') {
+    for (let i = 0; i !== args.length; i++) 
+    {
+        if (typeof(args[i]) === 'function') 
+        {
             functions[args[i].length] = args[i];
-        } else if (args[i] instanceof Array) {
+        } else if (args[i] instanceof Array) 
+        {
             const argArray = args[i];
             
             arrayTypeChecker(argArray);
             
-            if (argArray[0] instanceof Object && argArray[1] instanceof Function) {
+            if (argArray[0] instanceof Object && argArray[1] instanceof Function) 
+            {
                 functions[args[i][1].length] = args[i];
             }
-        } else { 
+        } else 
+        { 
             continue;
         }
     }
     
-    if (!functions.length) {
-        throw new SyntaxError('None of the input parameters were specified correctly, the function must accept a function or an array where the first argument is an object with the typing of the input parameter, and the second is the typed function')
+    if (!functions.length) 
+    {
+        throw new SyntaxError('None of the input parameters were specified correctly, the function must accept a function or an array where the first argument is an object with the typing of the input parameter, and the second is the typed function');
     }
     
-    return function() {
+    return function() 
+    {
         const callElement = functions[arguments.length];
         
-        if (callElement instanceof Function) {
+        if (callElement instanceof Function) 
+        {
             return functions[arguments.length].apply(this, arguments);
-            
-        } else if (callElement instanceof Array && callElement.length === 2) {
+        } else if (callElement instanceof Array && callElement.length === 2) 
+        {
             const typesOfCallElement = Object.values(callElement[0]);
-            let mathingTypes = [];
 
             arrayTypeChecker(callElement);
 
-            for (let i = 0; i !== Array.from(arguments).length; i++) {
-
-                if (typeof typesOfCallElement[i] !== 'string') {
-                    mathingTypes = ['0'];
-                    throw new SyntaxError('Type must be a string!')
+            for (let i = 0; i !== Array.from(arguments).length; i++) 
+            {
+                if (typeof typesOfCallElement[i] !== 'string') 
+                {
+                    throw new SyntaxError('Type must be a string!');
                 }
-
-                mathingTypes = [...mathingTypes, typeof(Array.from(arguments)[i]) === typesOfCallElement[i].toLowerCase() ?
-                    '1' : '0'
-                ]
+                
+                if (typeof(Array.from(arguments)[i]) !== typesOfCallElement[i].toLowerCase())
+                {
+                    throw new SyntaxError(`You have a mistake in your arguments type!`);
+                }
             }
             
-            const isMatchingTypes = mathingTypes.find((i) => i === "0");
-
-            if (isMatchingTypes === undefined) {
-                return functions[arguments.length][1].apply(this, arguments);
-            } else {
-                throw new SyntaxError(`You have a mistake in your arguments type!`);
-            }
-        } else {
+            return functions[arguments.length][1].apply(this, arguments);
+        } else 
+        {
             throw new SyntaxError('Argument must be type Function or Array of Object with arguments type and function with that arguments.');
         }
     };
