@@ -11,6 +11,8 @@ function overload()
         {
             throw new SyntaxError('Second argument of array must be a type Function.');
         }
+        
+        return true
     }
 
     const args = Array.from(arguments);
@@ -29,10 +31,8 @@ function overload()
         } else if (args[i] instanceof Array) 
         {
             const argArray = args[i];
-            
-            arrayTypeChecker(argArray);
-            
-            if (argArray[0] instanceof Object && argArray[1] instanceof Function) 
+
+            if (arrayTypeChecker(argArray)) 
             {
                 functions[args[i][1].length] = args[i];
             }
@@ -49,6 +49,11 @@ function overload()
     
     return function() 
     {
+        if (!arguments.length)
+        {
+            return new SyntaxError('Arguments must be specified');
+        }
+    
         const callElement = functions[arguments.length];
         
         if (callElement instanceof Function) 
@@ -57,23 +62,23 @@ function overload()
         } else if (callElement instanceof Array && callElement.length === 2) 
         {
             const typesOfCallElement = Object.values(callElement[0]);
-
-            arrayTypeChecker(callElement);
-
-            for (let i = 0; i !== Array.from(arguments).length; i++) 
+            if (arrayTypeChecker(callElement)) 
             {
-                if (typeof typesOfCallElement[i] !== 'string') 
+                for (let i = 0; i !== Array.from(arguments).length; i++) 
                 {
-                    throw new SyntaxError('Type must be a string!');
+                    if (typeof typesOfCallElement[i] !== 'string') 
+                    {
+                        throw new SyntaxError('Type must be a string!');
+                    }
+
+                    if (typeof(Array.from(arguments)[i]) !== typesOfCallElement[i].toLowerCase())
+                    {
+                        throw new SyntaxError(`You have a mistake in your arguments type!`);
+                    }
                 }
-                
-                if (typeof(Array.from(arguments)[i]) !== typesOfCallElement[i].toLowerCase())
-                {
-                    throw new SyntaxError(`You have a mistake in your arguments type!`);
-                }
+
+                return functions[arguments.length][1].apply(this, arguments);
             }
-            
-            return functions[arguments.length][1].apply(this, arguments);
         } else 
         {
             throw new SyntaxError('Argument must be type Function or Array of Object with arguments type and function with that arguments.');
