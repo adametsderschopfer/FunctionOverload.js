@@ -73,7 +73,7 @@ function overload()
 
                     if (typeof(Array.from(arguments)[i]) !== typesOfCallElement[i].toLowerCase())
                     {
-                        throw new SyntaxError(`You have a mistake in your arguments type!`);
+                        throw new SyntaxError(`One of the arguments does not match the specified type!`);
                     }
                 }
 
