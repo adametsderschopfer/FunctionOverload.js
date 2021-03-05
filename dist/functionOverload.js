@@ -15,18 +15,44 @@ function overload()
         return true
     }
     
-    function getArgs(func) {
-      // First match everything inside the function argument parens.
-      var args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
-
-      // Split the arguments string into an array comma delimited.
-      return args.split(',').map(function(arg) {
-        // Ensure no inline comments are parsed and trim the whitespace.
+    function getArgs(func) 
+    {
+      const args = func.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+      
+      return args.split(',').map((arg) => 
+      {
         return arg.replace(/\/\*.*\*\//, '').trim();
-      }).filter(function(arg) {
-        // Ensure no undefined values are added.
-        return arg;
-      });
+      })
+      .filter((arg) => arg);
+    }
+    
+    function matchingArguments(func, _innerArguments) 
+    {
+        if (!func || !_innerArguments) 
+        {
+            throw new SyntaxError('Insufficient parameters.');
+        }
+
+        const argumentsFromFuncs = getArgs(func);
+        const innerArguments = Object.keys(_innerArguments);
+                
+        if (
+            argumentsFromFuncs.length !== innerArguments.length
+            || innerArguments.length !== argumentsFromFuncs.length
+        )
+        {
+            throw new SyntaxError('Insufficient parameters.');
+        }
+        
+        for (let i = 0; i !== argumentsFromFuncs.length; i++)
+        {
+            if (argumentsFromFuncs[i] !== innerArguments[i]) 
+            {
+                throw new SyntaxError(`Typed arguments in an object and specified arguments in a function do not match = { index: ${i} }`);
+            }
+        }
+        
+        return true;
     }
 
     const args = Array.from(arguments);
@@ -76,7 +102,13 @@ function overload()
         } else if (callElement instanceof Array && callElement.length === 2) 
         {
             const typesOfCallElement = Object.values(callElement[0]);
-            if (arrayTypeChecker(callElement)) 
+            
+            if (!matchingArguments(functions[arguments.length][1], callElement[0]))
+            {
+                return;
+            }
+
+        if (arrayTypeChecker(callElement)) 
             {
                 for (let i = 0; i !== Array.from(arguments).length; i++) 
                 {
